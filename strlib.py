@@ -20,3 +20,4 @@ def get_domain(string):
     for i in links:
         if 'http' in i:
             domain.append(i.split('/')[2])
+    return domain
