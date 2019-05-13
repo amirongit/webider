@@ -10,11 +10,11 @@ def random_domain(length, *args):
     for i in range(length): domain += choice(list(ascii_lowercase))
     return domain + '.' + choice(list(args))
 
-def get_domain(string):
+def get_domain(html_str):
 
     """gets the domains of an html web page."""
 
-    tmpobj = BeautifulSoup(string, 'html.parser')
+    tmpobj = BeautifulSoup(html_str, 'html.parser')
     links = [i.attrs['href'] for i in i.find_all('a')]
     domains = list()
     for i in links:
