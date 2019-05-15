@@ -15,7 +15,7 @@ def get_domain(html_str):
     """gets the domains of an html web page."""
 
     tmpobj = BeautifulSoup(html_str, 'html.parser')
-    links = [i.attrs['href'] for i in html_str.find_all('a')]
+    links = [i.attrs['href'] for i in tmpobj.find_all('a')]
     domains = list()
     for i in links:
         if 'http' in i:
