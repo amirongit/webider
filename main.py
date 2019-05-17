@@ -28,8 +28,32 @@ if settings['first_run']:
     db_con.execute('CREATE TABLE domains(domain text)')
     db_con.commit()
 
-    starting_point = str(input('random domain to start <https://exam.ple>\n'))
+    starting_point = str(input('random domain to start <https://exam.ple>\nurl: '))
     
     db_con.execute('INSERT INTO domains VALUES ("{}")'.format(starting_point))
     db_con.commit()
     db_con.close()
+
+def main():
+    web_crowler = session()
+    db_con = sqlite3.connect('webider.db')
+
+    while True:
+        for i in db_con.execute('SELECT * FROM domains'):
+            res = web_crowler.get(i, proxies=settings['settings']['proxies'])
+            for j in domainlib.find_domain(res.text):
+                db_con.execute('INSERT INTO domains VALUES ("{}")'.format(j))
+                db_con.commit()
+
+try:
+    opt = int(input('\n1-veiw domains.\n2-surf!'))
+    if opt == 2:
+        main()
+    elif opt == 1:
+        db_con = sqlite3.connect('webider.db')
+        for i in db_con.execute('SELECT * FROM domains'):
+            print(i)
+    else:
+        print('--BAD OPTION--')
+except:
+    print('--BAD OPTION--')
