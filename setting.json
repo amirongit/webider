@@ -1,5 +1,5 @@
 {
-    "first_run": false,
+    "first_run": true,
     "settings": {
         "proxies": {
             "https": "",
