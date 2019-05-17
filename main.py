@@ -16,9 +16,9 @@ if settings['first_run']:
     print('first time running, pls spend 20 seconds to config webider!')
     
     print('\n- + - + - + - + - + - + - + - + - + - + - + - +\n')
-    settings['settings']['proxies']['http'] = str(input('http protocol <host:port>\nproxy: '))
+    settings['settings']['proxies']['http'] = str(input('http protocol <socks5h://host:port>\nproxy: '))
     print('\n- + - + - + - + - + - + - + - + - + - + - + - +\n')
-    settings['settings']['proxies']['https'] = str(input('https protocol <host:port>\nproxy: '))
+    settings['settings']['proxies']['https'] = str(input('https protocol <socks5h://host:port>\nproxy: '))
     
     settings['first_run'] = False
     json.dump(settings, open('setting.json', 'w'))
@@ -36,20 +36,20 @@ if settings['first_run']:
 
 def main():
     web_crowler = session()
-    db_con = sqlite3.connect('webider.db')
+    tmp_db_con = sqlite3.connect('webider.db')
 
     while True:
-        for i in db_con.execute('SELECT * FROM domains'):
-            res = web_crowler.get(i, proxies=settings['settings']['proxies'])
+        for i in tmp_db_con.execute('SELECT * FROM domains'):
+            res = web_crowler.get(i[0], proxies=settings['settings']['proxies'])
             for j in domainlib.find_domain(res.text):
-                db_con.execute('INSERT INTO domains VALUES ("{}")'.format(j))
-                db_con.commit()
+                tmp_db_con.execute('INSERT INTO domains VALUES ("{}")'.format(j))
+                tmp_db_con.commit()
 
 try:
-    opt = int(input('\n1-veiw domains.\n2-surf!'))
+    opt = int(input('\n1-veiw domains.\n2-surf!\n:'))
     if opt == 2:
         main()
-    elif opt == 1:
+    if opt == 1:
         db_con = sqlite3.connect('webider.db')
         for i in db_con.execute('SELECT * FROM domains'):
             print(i)
