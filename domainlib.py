@@ -1,8 +1,8 @@
-from random import choice
+from random import choice, randint
 from string import ascii_lowercase
 from bs4 import BeautifulSoup
 
-def random_domain(length, *args):
+def random_domain(*args, length=randint(3, 10)):
 
     """provides random domain names."""
 
@@ -10,7 +10,7 @@ def random_domain(length, *args):
     while len(domain) < length: domain += choice(list(ascii_lowercase))
     return domain + '.' + choice(list(args))
 
-def get_domain(html_str):
+def find_domain(html_str):
 
     """gets the domains of an html web page."""
 
@@ -19,5 +19,5 @@ def get_domain(html_str):
     domains = list()
     for i in links:
         if 'http' in i:
-            domains.append(i.split('/')[2])
+            domains.append(i.split('/')[0] + '//' + i.split('/')[2])
     return domains
