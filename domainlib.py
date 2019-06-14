@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 
 def random_domain(*args, length=randint(3, 10)):
 
-    """provides random domain names."""
+    "provides random domain names."
 
     domain = str()
     
@@ -14,7 +14,7 @@ def random_domain(*args, length=randint(3, 10)):
 
 def find_domain(html_str):
 
-    """gets the domains of an html web page."""
+    "gets the domains of an html web page."
 
     tmpobj = BeautifulSoup(html_str, 'html.parser')
     links = list()
