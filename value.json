@@ -1,0 +1,8 @@
+{
+    "first_run": true,
+    "last_id": 0,
+    "proxies": {
+        "http": "",
+        "https": ""
+    }
+}
