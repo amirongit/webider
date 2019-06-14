@@ -17,6 +17,5 @@ def generate_table(connection):
     cursor.execute('''CREATE TABLE IF NOT EXIST "domains" ("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, "domain"	TEXT NOT NULL);''')
     connection.commit()
 
-
     return True
 
