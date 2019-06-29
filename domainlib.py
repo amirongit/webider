@@ -10,6 +10,7 @@ def random_domain(*args, length=randint(3, 10)):
     
     while len(domain) < length: domain += choice(list(ascii_lowercase))
     
+    ### args are the domain names! like com, ir, org and...
     return domain + '.' + choice(list(args))
 
 def find_domain(html_str):
