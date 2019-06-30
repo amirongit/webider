@@ -2,7 +2,7 @@ from random import choice, randint
 from string import ascii_lowercase
 from bs4 import BeautifulSoup
 
-def random_domain(*args, length=randint(3, 10)):
+def generate(*args, length=randint(3, 10)):
 
     "provides random domain names."
 
@@ -13,7 +13,7 @@ def random_domain(*args, length=randint(3, 10)):
     ### args are the domain names! like com, ir, org and...
     return domain + '.' + choice(list(args))
 
-def find_domain(html_str):
+def surf(html_str):
 
     "gets the domains of an html web page."
 

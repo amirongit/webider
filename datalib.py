@@ -2,7 +2,7 @@ from sqlite3 import connect
 
 """all of the methods in this moudle are provided to be used with 'webider'!"""
 
-def generate_db(name):
+def generate(name):
     
     "generates a database and it's tables to use on webider!."
     
@@ -16,7 +16,7 @@ def generate_db(name):
 
     return {'cursor': c, 'connection': conn}
 
-def insert_domain(domain, connection):
+def write(domain, connection):
     
     """inserts a domain to the table"""
     
@@ -26,7 +26,7 @@ def insert_domain(domain, connection):
     cursor.execute('''INSERT INTO domains(domain) VALUES("{}")'''.format(domain))
     cursor.close()
 
-def read_domains(NumberOfRows, cursor):
+def read(NumberOfRows, cursor):
     
     """returns last X records on the domains table."""
     
