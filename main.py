@@ -21,7 +21,8 @@ def wizard_config():
 
     if cfg['first_run'] == True:
         ### you can leave it empty!
-        cfg['proxies']['http'], cfg['proxies']['https'] = input('proxy: ')
+        cfg['proxies']['http'] = input('proxy: ')
+        cfg['proxies']['https'] = cfg['proxies']['http']
         conn = datalib.generate('webider.db')
         cfg['first_run'] = False
         dump(cfg, 'config.json')
