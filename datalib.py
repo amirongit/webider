@@ -13,8 +13,9 @@ def generate(name):
     ### and the tables we need!
     c.execute('''CREATE TABLE IF NOT EXISTS domains (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, domain TEXT NOT NULL);''')
     conn.commit()
+    c.close()
 
-    return {'cursor': c, 'connection': conn}
+    return conn
 
 def write(domain, connection):
     
