@@ -11,14 +11,15 @@ print('info: https://github.com/bigAmir/webider')
 
 def wizard_config():
 
+    ### this function configs the proxy settings;
+    ### you can do it manually!
+
     try:
         cfg = load(open('config.json'))
     except:
         print('missing config file!')
         exit()
     
-    """does the configiration in the first run.(you can do it manually!)"""
-
     if cfg['first_run'] == True:
         ### you can leave it empty!
         cfg['proxies']['http'] = input('proxy: ')
