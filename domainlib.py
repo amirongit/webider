@@ -4,18 +4,13 @@ from bs4 import BeautifulSoup
 
 def generate(*args, length=randint(3, 10)):
 
-    "provides random domain names."
-
     domain = str()
     
     while len(domain) < length: domain += choice(list(ascii_lowercase))
     
-    ### args are the domain names! like com, ir, org and...
-    return domain + '.' + choice(list(args))
+    return 'http://' + domain + '.' + choice(list(args))
 
 def surf(html_str):
-
-    "gets the domains of an html web page."
 
     tmpobj = BeautifulSoup(html_str, 'html.parser')
     links = list()
