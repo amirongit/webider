@@ -7,11 +7,11 @@ class crawler(object):
     def __init__(self, proxy):
         self.proxies = proxy
 
-    def is_ok(self, domain, self.proxies):
+    def is_ok(self, domain):
 
         "checks if it can access to the server or not!"
 
-        res = get(domain, proxies=proxy)
+        res = get(domain, proxies=self.proxy)
         if str(res) == '<Response [200]>':
 
             return True
