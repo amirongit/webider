@@ -11,7 +11,7 @@ class crawler(object):
 
         "checks if it can access to the server or not!"
 
-        res = get(domain, proxies=self.proxy)
+        res = get(domain, proxies=self.proxies)
         if str(res) == '<Response [200]>':
 
             return True
@@ -19,7 +19,7 @@ class crawler(object):
 
             return False
 
-    def get(domain):
+    def get(self, domain):
 
         "just a re-define of the get method!"
 
