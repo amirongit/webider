@@ -1,15 +1,26 @@
-from requests import session
+from requests import get
 
-class crawler(session):
+class crawler(object):
 
-    def is_ok(self, domain, proxy):
+    "it's the crawler; requests to the server and gets the content!"
+
+    def __init__(self, proxy):
+        self.proxies = proxy
+
+    def is_ok(self, domain, self.proxies):
 
         "checks if it can access to the server or not!"
 
-        res = self.get(domain, proxies=proxy)
+        res = get(domain, proxies=proxy)
         if str(res) == '<Response [200]>':
 
             return True
         else:
 
             return False
+
+    def get(domain):
+
+        "just a re-define of the get method!"
+
+        return get(domain, proxies=self.proxies)
