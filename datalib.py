@@ -4,11 +4,9 @@ def generate(name):
     
     "generates a database and it's tables to use on webider!."
     
-    ### so we need a connection and a cursor to connect ti the databse and do some queries on it!
     conn = connect('webider.db')
     c = conn.cursor()
 
-    ### and the tables we need!
     c.execute('''CREATE TABLE IF NOT EXISTS domains (id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, domain TEXT NOT NULL);''')
     conn.commit()
     c.close()
@@ -36,4 +34,3 @@ def get_max(cursor, table):
     cursor.execute('''SELECT max(id) FROM `{}`'''.format(table))
 
     return cursor.fetchone()
-
