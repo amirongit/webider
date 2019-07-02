@@ -1,7 +1,5 @@
 from sqlite3 import connect
 
-"""all of the methods in this moudle are provided to be used with 'webider'!"""
-
 def generate(name):
     
     "generates a database and it's tables to use on webider!."
@@ -17,20 +15,25 @@ def generate(name):
 
     return conn
 
-def write(domain, connection):
+def write(domain, cursor, table):
     
-    """inserts a domain to the table"""
+    "inserts a domain to the table, commit after inserting!"
     
-    ### I don't wanna use the main cursor in the program! so just make a cursor to do with this fucntion. 
-    ### (increases memory and cpu usage a lot; but it's my choice!)
-    cursor = connection.cursor()
-    cursor.execute('''INSERT INTO domains(domain) VALUES("{}")'''.format(domain))
-    cursor.close()
+    cursor.execute('''INSERT INTO `{}` VALUES("{}")'''.format(table, domain))
 
-def read(NumberOfRows, cursor):
+def read(NumberOfRows, cursor, table):
     
-    """returns last X records on the domains table."""
+    "returns last X records on the domains table."
     
-    cursor.execute('''SELECT * FROM domains WHERE id > (SELECT max(id) FROM domains) - {}'''.format(NumberOfRows))
+    cursor.execute('''SELECT * FROM `{}` WHERE id > (SELECT max(id) FROM `{}`) - {}'''.format(table, table, NumberOfRows))
+    
     return cursor.fetchall()
+
+def get_max(cursor, table):
+    
+    "returns the maximum number of records in a table!"
+
+    cursor.execute('''SELECT max(id) FROM `{}`'''.format(table))
+
+    return cursor.fetchone()
 
