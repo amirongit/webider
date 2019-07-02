@@ -8,9 +8,6 @@ print(figlet_format('w3b1der'))
 print('git: https://github.com/bigAmir/webider')
 
 def start(ConfigFile):
-
-    "creates a connection and a cursor!"
-
     cfg = load(open(ConfigFile))
     if cfg['first_run']:
         tmp = input('(you can leave it empty)\nproxy: ')
@@ -19,30 +16,24 @@ def start(ConfigFile):
         cfg['first_run'] = False
         conn = datalib.generate('webider.db')
         dump(cfg, open(ConfigFile, 'w'))
-        
     else:
         conn = datalib.generate('webider.db')
-        
     c = conn.cursor()
-
     return {'cursor': c, 'connection': conn, 'config': cfg}
 
-def run(conn):
-
+def random_surf(conn):
     cursor = conn.cursor()
-    number_of_domains = datalib.get_max(cursor, 'domains')
-    if number_of_domains == (None,):
-        while True:
-            tmp = 'https://aparat.com'
-            print(tmp)
+    while True:
+        tmp = domainlib.generate('com', 'ir', 'org', 'info', 'io', 'pro')
+        print(tmp)
+        try:
             res = get(tmp)
             if res.ok == True:
                 datalib.write(tmp, cursor)
                 conn.commit()
-                print('done.')
-    else:
-        i = datalib.read(2, cursor)
-        print(i)
+                print(tmp)
+        except:
+            pass
 
 crawler = start('config.json')
-run(crawler['connection'])
+random_surf(crawler['connection'])
