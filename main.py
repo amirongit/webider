@@ -21,13 +21,13 @@ def start(ConfigFile):
     c = conn.cursor()
     return {'cursor': c, 'connection': conn, 'config': cfg}
 
-def random_surf(conn):
+def random_surf(conn, proxy):
     cursor = conn.cursor()
     while True:
         tmp = domainlib.generate('com', 'ir', 'org', 'info', 'io', 'pro')
         print(tmp)
         try:
-            res = get(tmp)
+            res = get(tmp, proxies=proxy)
             if res.ok == True:
                 datalib.write(tmp, cursor)
                 conn.commit()
@@ -35,5 +35,8 @@ def random_surf(conn):
         except:
             pass
 
+
+
+
 crawler = start('config.json')
-random_surf(crawler['connection'])
+random_surf(crawler['connection'], crawler['proxies'])
