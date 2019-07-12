@@ -28,9 +28,12 @@ def start():
 def main():
     var = start()
     call('clear', shell=True)
-    opt = input('1 - randomly create some domains!\n2 - look in the saved urls for new domains\nany other numbers - exit!')
+    print(figlet_format('w3b1der'))
+    opt = int(input('1 - randomly create some domains!\n2 - look in the saved urls for new domains\nany other numbers - exit!\nyour choice: '))
     
-    if opt == 1: surflib.random_surf(var['connection'], var['config']['proxies'])
-    elif opt == 2: surflib.surf_the_data(var['connection'])
-    else: exit()
+    if opt == 1: print(var); surflib.random_surf(var['connection'], var['config']['proxies'])
+    if opt == 2: surflib.surf_the_data(var['connection'])
+    if opt != 1 or opt != 2: exit()
 
+if __name__ == '__main__':
+    main()
