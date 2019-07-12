@@ -19,6 +19,22 @@ def random_surf(conn, proxy):
         except:
             pass
 
+def surf_the_data(conn):
+
+    """reads the last 10 domians in the database and
+    looks them for new domains!"""
+
+    cursor = conn.cursor()
+    tmp = datalib.read(cursor)
+
+    for i in tmp:
+        res = get(i)
+        urls = domainlib.surf(res.text)
+        for j in urls:
+            datalib.write(j, cursor)
+        conn.commit()
+
+
 def collect(html_str, conn):
 
     """inserts the gained domains of a html web page to
@@ -29,4 +45,3 @@ def collect(html_str, conn):
 
     for i in tmp: datalib.write(i, cursor)
     conn.commit()
-
