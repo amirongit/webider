@@ -3,7 +3,8 @@ from sqlite3 import connect
 def generate():
 
     """creates a database and it's tables to use; it 
-    won't delete your database if you already have one."""
+    won't delete your database if you already have one;
+    also it returns a connection!"""
 
     conn = connect('webider.db')
     c = conn.cursor()
