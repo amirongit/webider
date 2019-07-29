@@ -18,13 +18,13 @@ def surf(html_str):
     tmpobj = BeautifulSoup(html_str, 'html.parser')
     links = list()
     for i in tmpobj.find_all('a'):
-            try:
-                links.append(i.attrs['href'])
-            except:
-                pass
+        try:
+            links.append(i.attrs['href'])
+        except:
+            pass
     domains = list()
     for i in links:
         if 'http' in i:
-            domains.append(i.split('/')[0] + '//' + i.split('/')[2])
-            
+            domains.append(i.split('/') + '//' + i.split('/')[2])
+
     return domains
