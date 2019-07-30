@@ -1,7 +1,0 @@
-{
-    "first_run": true,
-    "proxies": {
-        "http": "",
-        "https": ""
-    }
-}
