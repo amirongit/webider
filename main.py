@@ -1,11 +1,33 @@
 from libs import stringLib, ormLib
 from json import dump, load
 from requests import get
+from subprocess import call
+from pyfiglet import figlet_format
+from time import sleep
 
-cfg = load(open('cfg/settings.json'))
+print(figlet_format('w3b1d3r'))
+print('source code: https://gitlab.com/bigAmir/webider')
+sleep(2)
+call('clear', shell=True)
 
-def setup():
-    pass
+with open('cfg/settings.json') as config_file: cfg = load(config_file)
+
+def setup(config=cfg):
+    
+    print('running setup...')
+    config['first_run'] = False
+    
+    proxy = input('(leave empty if you don\'t have one!)\nexample: sokcs5://127.0.0.1:9050\nproxy: ')
+
+    config['proxies']['https'] = proxy
+    config['proxies']['http'] = proxy
+    
+    global cfg
+    with open('cfg/settings.json', 'x') as config_file:
+        
+        dump(config, config_file)
+        cfg = load(config_file)
+
 
 def main():
     pass
