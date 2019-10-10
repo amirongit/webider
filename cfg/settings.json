@@ -1,0 +1,9 @@
+{
+"first_run": true,
+"settings": {
+"proxies": {
+"https": "",
+"http": ""
+}
+}
+}
