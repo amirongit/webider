@@ -12,7 +12,7 @@ call('clear', shell=True)
 
 with open('cfg/settings.json') as config_file: cfg = load(config_file)
 
-def setup(config=cfg):
+def setup(config):
     
     print('running setup...')
     config['first_run'] = False
@@ -32,8 +32,11 @@ def setup(config=cfg):
 def main():
     pass
 
-if cfg['first_run'] == True:
-    setup()
 
 if __name__ == 'main':
+    
+    if cfg['first_run'] == True:
+        
+        setup()
+
     main()
