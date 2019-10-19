@@ -32,8 +32,7 @@ def setup(config):
 def main(first_run=False):
 
     domain_pool = list()
-
-    if first_run == True
+    if first_run == True:
     
         print('at the first we need a webpage to create our domain pool!\nif you have one, enter it; if you don\'t have a url to start with, you can type \'random\' to generate a random domain!')
         starting_domain = input('\nstarting url: ')
@@ -44,20 +43,19 @@ def main(first_run=False):
         
             starting_domain = stringLib.generate('ir', 'com', 'org', 'net', 'us', 'uk', 'tk')
             res = get(starting_domain)
-
             if res.status_code == 200: domain_pool.append(starting_domain)
 
         else:
 
             res = get(starting_domain)
-
             if res.status_code == 200: domain_pool.append(starting_domain)
 
     else:
 
-        # read all domains from db and fill domain pool!
+        data_base_connection = ormLib.create_data_base()
+        data_base_cursor = data_base_connection.cursor()
 
-
+        for domain in ormLib.get_all_domains(data_base_cursor): domain_pool.append(domain)
 
 
 
