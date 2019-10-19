@@ -1,21 +1,24 @@
-from sqlalchemy import create_engine, Column, String, Integer
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
-
-Base = declarative_base()
-
-class domain(Base):
-
-    __tablename__ = 'domains'
-    
-    Id = Column('id', Integer, primary_key=True)
-    url = Column('url', String, unique=True)
+import sqlite3
 
 def create_data_base(path):
-    
-    engin = create_engine('sqlite:///' + path + 'webider.db')
-    Base.metadate.create_all(bind=engin)
 
-    session = sessionmaker()
-    
-    return session()
+    connection = sqlite3.connect(f'{path}/webider.db')
+    cursor = connection.cursor()
+
+    cursor.execute('CREATE TABLE IF NOT EXISTS domains("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, "domain" TEXT NOT NULL UNIQUE);')
+    cursor.close()
+
+    return connection
+
+
+def insert_new_domain(cursor, domain):
+
+    cursor.execute('INSERT INTO domains VALUES(?)', domain)
+
+
+def get_all_domains(cursor):
+
+    cursor.execute('SELECT domain FROM domains')
+
+    return cursor.fetchall()
+
