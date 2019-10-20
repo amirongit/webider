@@ -13,12 +13,11 @@ def create_data_base(path):
 
 def insert_new_domain(cursor, domain):
 
-    cursor.execute('INSERT INTO domains VALUES(?)', domain)
+    cursor.execute('INSERT INTO domains(domain) VALUES(?)', (domain,))
 
 
 def get_all_domains(cursor):
 
-    cursor.execute('SELECT domain FROM domains')
+    cursor.execute('SELECT * FROM domains')
 
     return cursor.fetchall()
-
