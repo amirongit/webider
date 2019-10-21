@@ -49,7 +49,6 @@ def main(first_run=False):
                     data_base_connection = ormLib.create_data_base()
                     break
 
-
         else:
 
             res = get(starting_domain)
@@ -63,20 +62,22 @@ def main(first_run=False):
         data_base_connection = ormLib.create_data_base()
 
     data_base_cursor = data_base_connection.cursor()
+
     try:
 
-        ormLib.insert_new_domain(data_base_cursor, domain_pool[0])
+        for domain in domain_pool: ormLib.insert_new_domain(data_base_cursor, domain)
+    
     except:
 
         pass
 
     domain_pool = dict()
-    for ID, domain in ormLib.get_all_domains(): domain_pool[ID] = domain
+    for ID, domain in ormLib.get_all_domains(data_base_cursor): domain_pool[ID] = domain
 
-    for url in domain_pool:
+    for record in domain_pool:
 
-        res = get(url[1])
-        # get the id of domain in data base to mark as surfed
+        res = get(record[1])
+        id_keeper = record[0]
         tmp_page = stringLib.WebPage(res.text)
         tmp_domain_list = tmp_page.get_domains()
 
