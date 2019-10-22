@@ -4,12 +4,14 @@ from requests import get
 from subprocess import call
 from pyfiglet import figlet_format
 from time import sleep
+from os.path import dirname, abspath
 
 print(figlet_format('w3b1d3r'))
 print('source code: https://gitlab.com/bigAmir/webider')
 sleep(2)
 call('clear', shell=True)
 
+abs_path = dirname(abspath(__file__))
 with open('cfg/settings.json') as config_file: cfg = load(config_file)
 
 def setup(config):
@@ -47,7 +49,7 @@ def main(first_run=False):
                 if res.status_code == 200:
 
                     domain_pool.append(starting_domain)
-                    data_base_connection = ormLib.create_data_base()
+                    data_base_connection = ormLib.create_data_base(abs_path)
                     break
 
         else:
@@ -56,11 +58,11 @@ def main(first_run=False):
             if res.status_code == 200:
 
                 domain_pool.append(starting_domain)
-                data_base_connection = ormLib.create_data_base()
+                data_base_connection = ormLib.create_data_base(abs_path)
 
     else:
 
-        data_base_connection = ormLib.create_data_base()
+        data_base_connection = ormLib.create_data_base(abs_path)
 
     data_base_cursor = data_base_connection.cursor()
     
@@ -95,12 +97,12 @@ if __name__ == 'main':
 
     if cfg['first_run'] == True:
 
-        setup()
+        setup(cfg)
 
         try:
 
             main(True)
-        except KeyboardInterrupt, SystemExit:
+        except (KeyboardInterrupt, SystemExit):
 
             with open('cfg/settings.json') as config_file: 
                 
@@ -118,7 +120,7 @@ if __name__ == 'main':
         try:
 
             main()
-        except KeyboardInterrupt, SystemExit:
+        except (KeyboardInterrupt, SystemExit):
 
             with open('cfg/settings.json') as config_file:
 
