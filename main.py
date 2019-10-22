@@ -28,7 +28,8 @@ def setup(config):
         dump(config, config_file)
         cfg = load(config_file)
 
-
+main_cursor = 'this variable is going to be recreated!'
+main_id_keeper = int()
 def main(first_run=False):
 
     domain_pool = list()
@@ -62,6 +63,9 @@ def main(first_run=False):
         data_base_connection = ormLib.create_data_base()
 
     data_base_cursor = data_base_connection.cursor()
+    
+    global main_cursor
+    main_cursor = data_base_cursor
 
     try:
 
@@ -77,7 +81,10 @@ def main(first_run=False):
     for record in domain_pool:
 
         res = get(record[1])
-        id_keeper = record[0]
+        
+        global main_id_keeper
+        main_id_keeper = record[0]
+
         tmp_page = stringLib.WebPage(res.text)
         tmp_domain_list = tmp_page.get_domains()
 
@@ -89,10 +96,36 @@ if __name__ == 'main':
     if cfg['first_run'] == True:
 
         setup()
-        main(True)
+
+        try:
+
+            main(True)
+        except KeyboardInterrupt, SystemExit:
+
+            with open('cfg/settings.json') as config_file: 
+                
+                cfg = load(config_file)
+                cfg['last_surfed_id'] = main_id_keeper
+                dump(cfg, config_file)
+                main_cursor.commit()
+
+                print('saving the data...')
+                exit()
+
 
     else:
 
-        main()
+        try:
 
-    # write interupt statement
+            main()
+        except KeyboardInterrupt, SystemExit:
+
+            with open('cfg/settings.json') as config_file:
+
+                cfg = load(config_file)
+                cfg['last_surfed_id'] = main_id_keeper
+                dump(cfg, config_file)
+                main_cursor.commit()
+
+                print('saving the data...')
+                exit()
