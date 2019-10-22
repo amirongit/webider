@@ -80,7 +80,7 @@ def main(first_run=False):
 
     for record in domain_pool:
 
-        res = get(record[1])
+        res = get(record[1], proxies=cfg['proxies'])
         
         global main_id_keeper
         main_id_keeper = record[0]
