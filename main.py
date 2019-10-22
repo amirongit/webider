@@ -93,7 +93,7 @@ def main(first_run=False):
         for domain in tmp_domain_list: ormLib.insert_new_domain(data_base_cursor, domain)
 
 
-if __name__ == 'main':
+if __name__ == '__main__':
 
     if cfg['first_run'] == True:
 
