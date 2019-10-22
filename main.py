@@ -14,23 +14,22 @@ call('clear', shell=True)
 abs_path = dirname(abspath(__file__))
 with open('cfg/settings.json') as config_file: cfg = load(config_file)
 
-def setup(config):
+def setup():
 
     print('running setup...')
-    config['first_run'] = False
-
-    proxy = input('(leave empty if you don\'t have one!)\nexample: sokcs5://127.0.0.1:9050\nproxy: ')
-
-    config['proxies']['https'] = proxy
-    config['proxies']['http'] = proxy
-
     global cfg
-    with open('cfg/settings.json', 'x') as config_file:
 
-        dump(config, config_file)
-        cfg = load(config_file)
+    proxy = input('(leave empty if you don\'t have one!)\nexample: sokcs5h://127.0.0.1:9050\nproxy: ')
 
-main_cursor = 'this variable is going to be recreated!'
+    cfg['proxies']['https'] = proxy
+    cfg['proxies']['http'] = proxy
+    cfg['first_run'] = False
+    
+    with open('cfg/settings.json', 'w+') as config_file:
+
+        dump(cfg, config_file)
+
+main_conn = 'this variable is going to be recreated!'
 main_id_keeper = int()
 def main(first_run=False):
 
@@ -66,8 +65,8 @@ def main(first_run=False):
 
     data_base_cursor = data_base_connection.cursor()
     
-    global main_cursor
-    main_cursor = data_base_cursor
+    global main_conn
+    main_conn = data_base_connection
 
     try:
 
@@ -78,10 +77,10 @@ def main(first_run=False):
         pass
 
     domain_pool = dict()
-    for ID, domain in ormLib.get_all_domains(data_base_cursor): domain_pool[ID] = domain
-
-    for record in domain_pool:
-
+    for Id, domain in ormLib.get_all_domains(data_base_cursor): domain_pool[Id] = domain
+    
+    for record in domain_pool.items():
+        
         res = get(record[1], proxies=cfg['proxies'])
         
         global main_id_keeper
@@ -94,22 +93,22 @@ def main(first_run=False):
 
 
 if __name__ == '__main__':
-
+    print(cfg)
     if cfg['first_run'] == True:
 
-        setup(cfg)
+        setup()
 
         try:
 
             main(True)
         except (KeyboardInterrupt, SystemExit):
 
-            with open('cfg/settings.json') as config_file: 
+            with open('cfg/settings.json', 'w+') as config_file: 
                 
                 cfg = load(config_file)
                 cfg['last_surfed_id'] = main_id_keeper
                 dump(cfg, config_file)
-                main_cursor.commit()
+                main_conn.commit()
 
                 print('saving the data...')
                 exit()
@@ -122,12 +121,12 @@ if __name__ == '__main__':
             main()
         except (KeyboardInterrupt, SystemExit):
 
-            with open('cfg/settings.json') as config_file:
+            with open('cfg/settings.json', 'w+') as config_file:
 
                 cfg = load(config_file)
                 cfg['last_surfed_id'] = main_id_keeper
                 dump(cfg, config_file)
-                main_cursor.commit()
+                main_conn.commit()
 
                 print('saving the data...')
                 exit()
