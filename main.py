@@ -64,6 +64,7 @@ def main(first_run=False):
         data_base_connection = ormLib.create_data_base(abs_path)
 
     data_base_cursor = data_base_connection.cursor()
+    ormLib.insert_new_domain(data_base_cursor, starting_domain)
     
     global main_conn
     main_conn = data_base_connection
@@ -78,7 +79,7 @@ def main(first_run=False):
 
     domain_pool = dict()
     for Id, domain in ormLib.get_all_domains(data_base_cursor): domain_pool[Id] = domain
-    
+    #a true while loop here and the not surfed domains!
     for record in domain_pool.items():
         
         res = get(record[1], proxies=cfg['proxies'])
@@ -89,7 +90,10 @@ def main(first_run=False):
         tmp_page = stringLib.WebPage(res.text)
         tmp_domain_list = tmp_page.get_domains()
 
-        for domain in tmp_domain_list: ormLib.insert_new_domain(data_base_cursor, domain)
+        for domain in tmp_domain_list: 
+            
+            print(domain)
+            ormLib.insert_new_domain(data_base_cursor, domain)
 
 
 if __name__ == '__main__':

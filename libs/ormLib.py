@@ -15,7 +15,7 @@ def insert_new_domain(cursor, domain):
 
     cursor.execute('INSERT INTO domains(domain) VALUES(?)', (domain,))
 
-
+#add the id grater from argument to escape the surfed pages!
 def get_all_domains(cursor):
 
     cursor.execute('SELECT * FROM domains')
