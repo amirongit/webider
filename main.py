@@ -26,9 +26,7 @@ def setup():
     cfg['proxies']['http'] = proxy
     cfg['first_run'] = False
     
-    with open('cfg/settings.json', 'w+') as config_file:
-
-        dump(cfg, config_file)
+    with open('cfg/settings.json', 'w+') as config_file: dump(cfg, config_file)
 
 main_conn = 'this variable is going to be recreated!'
 main_id_keeper = int()
@@ -96,15 +94,15 @@ def main(first_run=False):
             
 @register
 def commit_and_exit():
-    
-    with open('cfg/settings.json', 'w+') as config_file:
+            
+    global main_id_keeper
+    global main_conn
 
-        cfg = load(config_file)
-        cfg['last_surfed_id']
-        dump(cfg, config_file)
+    cfg = load(open('cfg/settings.json'))
+    cfg['last_surfed_id'] = main_id_keeper
+    dump(cfg, open('cfg/settings.json', 'w+'))
 
-        global main_conn
-        main_conn.commit()
+    main_conn.commit()
 
 if __name__ == '__main__':
 
