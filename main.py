@@ -59,9 +59,7 @@ def main(first_run=False):
                 domain_pool.append(starting_domain)
                 data_base_connection = ormLib.create_data_base(abs_path)
 
-    else:
-
-        data_base_connection = ormLib.create_data_base(abs_path)
+    else: data_base_connection = ormLib.create_data_base(abs_path)
 
     data_base_cursor = data_base_connection.cursor()
     ormLib.insert_new_domain(data_base_cursor, starting_domain)
@@ -69,13 +67,11 @@ def main(first_run=False):
     global main_conn
     main_conn = data_base_connection
 
-    try:
-
+    try: 
+        
         for domain in domain_pool: ormLib.insert_new_domain(data_base_cursor, domain)
     
-    except:
-
-        pass
+    except: pass
 
     domain_pool = dict()
     
@@ -85,19 +81,22 @@ def main(first_run=False):
 
         for record in domain_pool.items():
             
-            res = get(record[1], proxies=cfg['proxies'])
-            cfg['last_surfed_id'] += 1
+            try:
 
-            global main_id_keeper
-            main_id_keeper = record[0]
+                res = get(record[1], proxies=cfg['proxies'])
 
-            tmp_page = stringLib.WebPage(res.text)
-            tmp_domain_list = tmp_page.get_domains()
+                global main_id_keeper
+                main_id_keeper = record[0]
 
-            for domain in tmp_domain_list:
-                
-                print(domain)
-                ormLib.insert_new_domain(data_base_cursor, domain)
+                tmp_page = stringLib.WebPage(res.text)
+                tmp_domain_list = tmp_page.get_domains()
+
+                for domain in tmp_domain_list:
+                    
+                    print(domain)
+                    ormLib.insert_new_domain(data_base_cursor, domain)
+            
+            except: pass
 
 
 if __name__ == '__main__':
@@ -106,9 +105,7 @@ if __name__ == '__main__':
 
         setup()
 
-        try:
-
-            main(True)
+        try: main(True)
         except (KeyboardInterrupt, SystemExit):
 
             with open('cfg/settings.json', 'w+') as config_file: 
@@ -124,9 +121,7 @@ if __name__ == '__main__':
 
     else:
 
-        try:
-
-            main()
+        try: main()
         except (KeyboardInterrupt, SystemExit):
 
             with open('cfg/settings.json', 'w+') as config_file:
