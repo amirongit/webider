@@ -78,26 +78,30 @@ def main(first_run=False):
         pass
 
     domain_pool = dict()
-    for Id, domain in ormLib.get_all_domains(data_base_cursor): domain_pool[Id] = domain
-    #a true while loop here and the not surfed domains!
-    for record in domain_pool.items():
-        
-        res = get(record[1], proxies=cfg['proxies'])
-        
-        global main_id_keeper
-        main_id_keeper = record[0]
+    
+    while True:
 
-        tmp_page = stringLib.WebPage(res.text)
-        tmp_domain_list = tmp_page.get_domains()
+        for Id, domain in ormLib.get_all_domains(data_base_cursor, cfg['last_surfed_id']): domain_pool[Id] = domain
 
-        for domain in tmp_domain_list: 
+        for record in domain_pool.items():
             
-            print(domain)
-            ormLib.insert_new_domain(data_base_cursor, domain)
+            res = get(record[1], proxies=cfg['proxies'])
+            cfg['last_surfed_id'] += 1
+
+            global main_id_keeper
+            main_id_keeper = record[0]
+
+            tmp_page = stringLib.WebPage(res.text)
+            tmp_domain_list = tmp_page.get_domains()
+
+            for domain in tmp_domain_list:
+                
+                print(domain)
+                ormLib.insert_new_domain(data_base_cursor, domain)
 
 
 if __name__ == '__main__':
-    print(cfg)
+
     if cfg['first_run'] == True:
 
         setup()
