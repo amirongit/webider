@@ -81,24 +81,19 @@ def main(first_run=False):
         for Id, domain in ormLib.get_all_domains(data_base_cursor, cfg['last_surfed_id']): domain_pool[Id] = domain
 
         for record in domain_pool.items():
+
+            res = get(record[1], proxies=cfg['proxies'])
+
+            global main_id_keeper
+            main_id_keeper = record[0]
+
+            tmp_page = stringLib.WebPage(res.text)
+            tmp_domain_list = tmp_page.get_domains()
+
+            for domain in tmp_domain_list:
+                print(domain)
+                ormLib.insert_new_domain(data_base_cursor, domain)
             
-            try:
-
-                res = get(record[1], proxies=cfg['proxies'])
-
-                global main_id_keeper
-                main_id_keeper = record[0]
-
-                tmp_page = stringLib.WebPage(res.text)
-                tmp_domain_list = tmp_page.get_domains()
-
-                for domain in tmp_domain_list:
-                    
-                    print(domain)
-                    ormLib.insert_new_domain(data_base_cursor, domain)
-            
-            except: pass
-
 @register
 def commit_and_exit():
     
