@@ -5,6 +5,7 @@ from subprocess import call
 from pyfiglet import figlet_format
 from time import sleep
 from os.path import dirname, abspath
+from atexit import register
 
 print(figlet_format('w3b1d3r'))
 print('source code: https://gitlab.com/bigAmir/webider')
@@ -98,38 +99,25 @@ def main(first_run=False):
             
             except: pass
 
+@register
+def commit_and_exit():
+    
+    with open('cfg/setting.json', 'w+') as config_file:
+
+        cfg = load(config_file)
+        cfg['last_surfed_id']
+        dump(cfg, config_file)
+
+        global main_conn
+        main_conn.commit()
 
 if __name__ == '__main__':
 
     if cfg['first_run'] == True:
 
         setup()
-
-        try: main(True)
-        except (KeyboardInterrupt, SystemExit):
-
-            with open('cfg/settings.json', 'w+') as config_file: 
-                
-                cfg = load(config_file)
-                cfg['last_surfed_id'] = main_id_keeper
-                dump(cfg, config_file)
-                main_conn.commit()
-
-                print('saving the data...')
-                exit()
-
+        main(True)
 
     else:
 
-        try: main()
-        except (KeyboardInterrupt, SystemExit):
-
-            with open('cfg/settings.json', 'w+') as config_file:
-
-                cfg = load(config_file)
-                cfg['last_surfed_id'] = main_id_keeper
-                dump(cfg, config_file)
-                main_conn.commit()
-
-                print('saving the data...')
-                exit()
+        main()
