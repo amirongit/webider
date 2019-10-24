@@ -97,7 +97,7 @@ def main(first_run=False):
 @register
 def commit_and_exit():
     
-    with open('cfg/setting.json', 'w+') as config_file:
+    with open('cfg/settings.json', 'w+') as config_file:
 
         cfg = load(config_file)
         cfg['last_surfed_id']
