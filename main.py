@@ -91,7 +91,10 @@ def main(first_run=False):
 
             for domain in tmp_domain_list:
                 print(domain)
-                ormLib.insert_new_domain(data_base_cursor, domain)
+                
+                try:
+                    ormLib.insert_new_domain(data_base_cursor, domain)
+                except: pass
             
 @register
 def commit_and_exit():
