@@ -5,7 +5,7 @@ def create_data_base(path):
     connection = sqlite3.connect(f'{path}/webider.db')
     cursor = connection.cursor()
 
-    cursor.execute('CREATE TABLE IF NOT EXISTS domains("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "domain" TEXT NOT NULL);')
+    cursor.execute('CREATE TABLE IF NOT EXISTS domains("id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "domain" TEXT NOT NULL UNIQUE);')
     cursor.close()
 
     return connection
