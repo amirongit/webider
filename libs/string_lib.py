@@ -1,44 +1,49 @@
+"""this module is made to work with texts, strings and also html documents!"""
+
 from random import choice, randint
 from string import ascii_lowercase
 from bs4 import BeautifulSoup
 
 
-class WebPage(object):
-    
+class WebPage():
+
+    """takes an html string and converts it to a WebPage object that has urls in it
+    and we can get them all using bs4 module."""
+
     def __init__(self, html_str):
-        
-        self.HTML_STRING = html_str
+
+        self.html_string = html_str
 
     def get_domains(self):
 
         "returns urls of the given HTML string!"
 
-        tmpobj = BeautifulSoup(self.HTML_STRING, 'html.parser')
-        
+        tmpobj = BeautifulSoup(self.html_string, 'html.parser')
         urls = list()
 
         for url in tmpobj.find_all('a'):
-            
+
             try:
-                
+
                 urls.append(url.attrs['href'])
+
             except:
-                
+
                 pass
-        
+
         domain_names = list()
 
         for url in urls:
-            
-            if 'http' in url: 
+
+            if 'http' in url:
 
                 domain_names.append(url.split('/')[0] + '//' + url.split('/')[2])
-        
+
         return domain_names
 
     def __repr__(self):
 
-        return str(self.HTML_STRING)
+        return str(self.html_string)
 
 
 def generate(*args, max_length=8):
@@ -51,4 +56,3 @@ def generate(*args, max_length=8):
         domain += choice(list(ascii_lowercase))
 
     return 'http://' + domain + '.' + choice(list(args))
-    
