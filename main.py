@@ -43,6 +43,7 @@ def main(first_run=False):
             while True:
 
                 starting_domain = stringLib.generate('ir', 'com', 'org', 'net', 'us', 'uk', 'tk')
+                print(starting_domain)
                 res = get(starting_domain)
                 if res.status_code == 200:
 
