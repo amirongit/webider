@@ -9,8 +9,6 @@ from requests import get
 from pyfiglet import figlet_format
 from libs import string_lib, orm_lib
 
-
-
 print(figlet_format('w3b1d3r'))
 print('source code: https://gitlab.com/bigAmir/webider')
 sleep(2)
