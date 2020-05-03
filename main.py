@@ -1,7 +1,7 @@
 from os.path import dirname, abspath
 from json import dump, load
 from requests import get
-from sqlalchemy import create_engine, Integer, Column, String
+from sqlalchemy import create_engine, Integer, Column, String, Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from bs4 import BeautifulSoup
 
@@ -14,8 +14,9 @@ class DomainModel(alchemy_base):
     __tablename__ = 'domains'
     id_ = Column(Integer, primary_key=True)
     url = Column(String, unique=True)
+    surfed = Column(Boolean, default=False)
 
-    def __str__(self):
+    def __repr__(self):
         return f'{self.id_}: {self.url}'
 
 
