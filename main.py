@@ -1,4 +1,6 @@
 from os.path import dirname, abspath
+from json import dump, load
+from requests import get
 from sqlalchemy import create_engine, Integer, Column, String
 from sqlalchemy.ext.declarative import declarative_base
 from bs4 import BeautifulSoup
@@ -18,3 +20,7 @@ class DomainModel(alchemy_base):
 
 
 alchemy_base.metadata.create_all(alchemy_engine)
+
+
+def get_urls(plain_html):
+    vanilla_bs4 = BeautifulSoup(plain_html)
