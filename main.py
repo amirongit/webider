@@ -36,7 +36,7 @@ def get_urls(plain_html):
 
 def generate_url(min_length=3, max_length=10, domain_names='com,net,org'):
     url = str()
-    for i in rang(randint(min_length, max_length)):
+    for i in range(randint(min_length, max_length)):
         url += choice(list(ascii_lowercase))
     url += '.' + choice(list(domain_names.split(',')))
     return url
