@@ -7,10 +7,12 @@ from string import ascii_lowercase
 from bs4 import BeautifulSoup
 from sqlalchemy import create_engine, Integer, Column, String, Boolean
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 ABS_PATH = dirname(abspath(__name__))
 alchemy_base = declarative_base()
 alchemy_engine = create_engine(f'sqlite:///{ABS_PATH}/webider.sql')
+session = sessionmaker(bind=alchemy_engine)
 
 
 class DomainModel(alchemy_base):
@@ -42,3 +44,7 @@ def generate_url(min_length=3, max_length=10, domain_names='com,net,org'):
         url += choice(list(ascii_lowercase))
     url += '.' + choice(list(domain_names.split(',')))
     return url
+
+
+def main():
+    config = load(open(f'{ABS_PATH}/config.json'))
