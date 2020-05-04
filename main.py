@@ -42,8 +42,3 @@ def generate_url(min_length=3, max_length=10, domain_names='com,net,org'):
         url += choice(list(ascii_lowercase))
     url += '.' + choice(list(domain_names.split(',')))
     return url
-
-
-def read_config(path_to_config=f'{ABS_PATH}/config.json'):
-    globals cfg
-    cfg = load(open(path_to_config))
