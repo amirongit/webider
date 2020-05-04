@@ -33,7 +33,7 @@ def get_urls(plain_html):
         href = a_tag.attrs['href']
         if 'http' in href:
             urls.append(href.split('/')[2])
-    return set(urls)
+    return list(set(urls))
 
 
 def generate_url(min_length=3, max_length=10, domain_names='com,net,org'):
