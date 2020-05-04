@@ -30,8 +30,10 @@ def get_urls(plain_html):
     vanilla_bs4 = BeautifulSoup(plain_html, 'html.parser')
     urls = list()
     for a_tag in vanilla_bs4.find_all('a'):
-        urls.append(a_tag.attrs['href'])
-    return list(filter(lambda s: True if 'http' in s else False, urls))
+        href = a_tag.attrs['href']
+        if 'http' in href:
+            urls.append(href.split('/')[2])
+    return set(urls)
 
 
 def generate_url(min_length=3, max_length=10, domain_names='com,net,org'):
