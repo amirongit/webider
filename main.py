@@ -1,18 +1,24 @@
 from json import dump, load
 from os.path import dirname, abspath
 from requests import get
+from requests.exceptions import ConnectionError, ConnectTimeout
 from random import randint, choice
 from string import ascii_lowercase
+from socket import gaierror
+from urllib3.exceptions import NewConnectionError
+
 
 from bs4 import BeautifulSoup
 from sqlalchemy import create_engine, Integer, Column, String, Boolean
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
 ABS_PATH = dirname(abspath(__name__))
 alchemy_base = declarative_base()
 alchemy_engine = create_engine(f'sqlite:///{ABS_PATH}/webider.sql')
-session = sessionmaker(bind=alchemy_engine)
+alchemy_sessionmaker = sessionmaker(bind=alchemy_engine)
+session = alchemy_sessionmaker()
 
 
 class DomainModel(alchemy_base):
@@ -48,3 +54,21 @@ def generate_url(min_length=3, max_length=10, domain_names='com,net,org'):
 
 def main():
     config = load(open(f'{ABS_PATH}/config.json'))
+    if config['use_random_urls']:
+        while True:
+            url = generate_url()
+            try:
+                response = get(f'http://{url}', proxies=config['proxy'])
+            except(gaierror, ConnectTimeout, ConnectionError):
+                continue
+            if response.status_code == 200:
+                new_domain = DomainModel(url=url, surfed=False)
+                if config['verbos']:
+                    print(url)
+                try:
+                    session.add(new_domain)
+                    session.commit()
+                except IntegrityError:
+                    session.rollback()
+    else:
+        pass
