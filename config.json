@@ -1,0 +1,9 @@
+{
+    "first_run": true,
+    "last_surfed_url_id": 0,
+    "use_random_urls": true,
+    "proxy": {
+        "http": "",
+        "https": ""
+    }
+}
