@@ -4,9 +4,9 @@ from requests import get
 from random import randint, choice
 from string import ascii_lowercase
 
+from bs4 import BeautifulSoup
 from sqlalchemy import create_engine, Integer, Column, String, Boolean
 from sqlalchemy.ext.declarative import declarative_base
-from bs4 import BeautifulSoup
 
 ABS_PATH = dirname(abspath(__name__))
 alchemy_base = declarative_base()
