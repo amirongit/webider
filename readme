@@ -35,3 +35,11 @@ config file to use when surfin/crawling.
 }
 
 *you can use either socks or http for both!
+
+-searching thru random domains is so fukcing slow!
+
+if you have domains to start and you don't want to
+w8 for finding valid domains, you can put your own
+domains in the database and change the value of
+use_random_urls in config file, remember to set the
+surfed field to 0 when inserting your domains.
