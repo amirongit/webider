@@ -3,8 +3,9 @@ from os.path import dirname, abspath
 from requests import get
 from requests.exceptions import ConnectionError, ConnectTimeout
 from random import randint, choice
-from string import ascii_lowercase
 from socket import gaierror
+from string import ascii_lowercase
+from subprocess import call
 from urllib3.exceptions import NewConnectionError
 
 
@@ -72,3 +73,39 @@ def main():
                     session.rollback()
     else:
         pass
+
+
+call('clear', shell=True)
+print('''
+                      ::
+                     +ooo+
+                    +oooooo:
+           /++/     :ooooooo+
+         :yyyyyy/     +ooooooo:
+         +yyyyyyo      /ooooooo/
+          /syyy+ :/+:    +oooooo+
+                +ooooo+/  /oooooo+
+       :       +ooooooooo+/:+ooooo+
+     +ooo+:    :ooooooooooooooooooo:
+    +ooooooo/    +oooo+/+ooooooooo/
+    :+oooooooo+:  +oooo+  :+oooo/
+      :/ooooooooo/:/ooooo:   ::
+         :+oooooooo+oooooo:
+            /+oooooooooooo:
+               /+ooooooo+
+                  :/++/
+
+''')
+print('''
+    *Source Code
+    Git Repository: https://gitlab.com/bigAmir/webider
+
+    *Configuration
+    You can edit webider/config.json manually
+
+    *Note
+    To view your collected urls see webider/webider.sql
+    you can use sqlitebrowser or the cli interface
+        ''')
+_ = input('press Return to continue...')
+call('clear', shell=True)
