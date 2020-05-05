@@ -77,7 +77,8 @@ def main():
                             DomainModel.surfed == 0).all()
             for domain in domain_pool:
                 try:
-                    response = get(domain, proxies=config['proxy'])
+                    response = get(f'http://{domain.url}',
+                                   proxies=config['proxy'])
                     extracted_urls = get_urls(response.text)
                     for url in extracted_urls:
                         new_domain = DomainModel(url=url, surfed=False)
@@ -85,8 +86,49 @@ def main():
                             print(url)
                         try:
                             session.add(new_domain)
-                            session.commi()
+                            session.commit()
                         except IntegrityError:
                             session.rollback()
                 except(gaierror, ConnectTimeout, ConnectionError):
                     continue
+
+
+if __name__ == '__main__':
+    call('clear', shell=True)
+    _ = input('''
+                      ::
+                     +ooo+
+                    +oooooo:
+           /++/     :ooooooo+
+         :yyyyyy/     +ooooooo:
+         +yyyyyyo      /ooooooo/
+          /syyy+ :/+:    +oooooo+
+                +ooooo+/  /oooooo+
+       :       +ooooooooo+/:+ooooo+
+     +ooo+:    :ooooooooooooooooooo:
+    +ooooooo/    +oooo+/+ooooooooo/
+    :+oooooooo+:  +oooo+  :+oooo/
+      :/ooooooooo/:/ooooo:   ::
+         :+oooooooo+oooooo:
+            /+oooooooooooo:
+               /+ooooooo+
+                  :/++/
+
+
+    -Source Code
+    Git Repository: https://gitlab.com/bigAmir/webider
+
+    *Configuration
+    You can edit webider/config.json manually
+
+    -Note
+    To view your collected urls see webider/webider.sql
+    you can use sqlitebrowser or the cli interface
+
+    -Press Return to continue...
+    ''')
+    while True:
+        try:
+            main()
+        except KeyboardInterrupt:
+            print('you can star me in gitlab if you found me useful, bye.')
