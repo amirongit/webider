@@ -57,18 +57,23 @@ def main():
     if config['use_random_urls']:
         while True:
             url = generate_url()
+            if config['verbos']:
+                print('    generated random domain:')
+                print('    ' + url)
             try:
                 response = get(f'http://{url}', proxies=config['proxy'])
             except(gaierror, ConnectTimeout, ConnectionError):
+                if config['verbos']:
+                    print('    invalid!')
                 continue
             if response.status_code == 200:
                 new_domain = DomainModel(url=url, surfed=False)
-                if config['verbos']:
-                    print('    ' + url)
                 try:
                     session.add(new_domain)
                     session.commit()
+                    print('    valid!')
                 except IntegrityError:
+                    print('    invalid!')
                     session.rollback()
     else:
         while True:
