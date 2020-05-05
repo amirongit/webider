@@ -58,13 +58,11 @@ def main():
         while True:
             url = generate_url()
             if config['verbos']:
-                print('    generated random domain:')
+                print('    generating random domains...')
                 print('    ' + url)
             try:
                 response = get(f'http://{url}', proxies=config['proxy'])
             except(gaierror, ConnectTimeout, ConnectionError):
-                if config['verbos']:
-                    print('    invalid!')
                 continue
             if response.status_code == 200:
                 new_domain = DomainModel(url=url, surfed=False)
@@ -73,7 +71,6 @@ def main():
                     session.commit()
                     print('    valid!')
                 except IntegrityError:
-                    print('    invalid!')
                     session.rollback()
     else:
         while True:
@@ -124,7 +121,7 @@ if __name__ == '__main__':
     -Source Code
     Git Repository: https://gitlab.com/bigAmir/webider
 
-    *Configuration
+    -Configuration
     You can edit src/config.json manually
 
     -Note
