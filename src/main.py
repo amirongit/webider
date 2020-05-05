@@ -125,7 +125,7 @@ if __name__ == '__main__':
     Git Repository: https://gitlab.com/bigAmir/webider
 
     *Configuration
-    You can edit webider/config.json manually
+    You can edit src/config.json manually
 
     -Note
     To view your collected urls see webider/webider.sql
