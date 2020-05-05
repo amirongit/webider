@@ -65,7 +65,7 @@ def main():
             if response.status_code == 200:
                 new_domain = DomainModel(url=url, surfed=False)
                 if config['verbos']:
-                    print(url)
+                    print('    ' + url)
                 try:
                     session.add(new_domain)
                     session.commit()
@@ -85,7 +85,7 @@ def main():
                     for url in extracted_urls:
                         new_domain = DomainModel(url=url, surfed=False)
                         if config['verbos']:
-                            print(url)
+                            print('    ' + url)
                         try:
                             session.add(new_domain)
                             session.commit()
