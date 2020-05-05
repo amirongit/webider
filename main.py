@@ -74,8 +74,7 @@ def main():
     else:
         while True:
             domain_pool = session.query(DomainModel).filter(
-                            DomainModel.id_ >=
-                            config['last_surfed_url_id']).all()
+                            DomainModel.surfed == 0).all()
             for domain in domain_pool:
                 try:
                     response = get(domain, proxies=config['proxy'])
