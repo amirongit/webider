@@ -80,6 +80,8 @@ def main():
                     response = get(f'http://{domain.url}',
                                    proxies=config['proxy'])
                     extracted_urls = get_urls(response.text)
+                    domain.surfed = True
+                    session.commit()
                     for url in extracted_urls:
                         new_domain = DomainModel(url=url, surfed=False)
                         if config['verbos']:
