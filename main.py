@@ -78,59 +78,15 @@ def main():
             for domain in domain_pool:
                 try:
                     response = get(domain, proxies=config['proxy'])
-                except(gaierror, ConnectTimeout, ConnectionError):
-                    continue
-                extracted_urls = get_urls(response.text)
-                for url in extracted_urls:
-                    try:
+                    extracted_urls = get_urls(response.text)
+                    for url in extracted_urls:
                         new_domain = DomainModel(url=url, surfed=False)
                         if config['verbos']:
                             print(url)
                         try:
                             session.add(new_domain)
-                            session.commit()
+                            session.commi()
                         except IntegrityError:
                             session.rollback()
-
-
-if __name__ == '__main__':
-    call('clear', shell=True)
-    print('''
-                          ::
-                         +ooo+
-                        +oooooo:
-               /++/     :ooooooo+
-             :yyyyyy/     +ooooooo:
-             +yyyyyyo      /ooooooo/
-              /syyy+ :/+:    +oooooo+
-                    +ooooo+/  /oooooo+
-           :       +ooooooooo+/:+ooooo+
-         +ooo+:    :ooooooooooooooooooo:
-        +ooooooo/    +oooo+/+ooooooooo/
-        :+oooooooo+:  +oooo+  :+oooo/
-          :/ooooooooo/:/ooooo:   ::
-             :+oooooooo+oooooo:
-                /+oooooooooooo:
-                   /+ooooooo+
-                      :/++/
-
-    ''')
-    print('''
-        *Source Code
-        Git Repository: https://gitlab.com/bigAmir/webider
-
-        *Configuration
-        You can edit webider/config.json manually
-
-        *Note
-        To view your collected urls see webider/webider.sql
-        you can use sqlitebrowser or the cli interface
-            ''')
-    _ = input('press Return to continue...')
-    call('clear', shell=True)
-    while True:
-        try:
-            main()
-        except KeyboardInterrupt:
-            call('clear', shell=True)
-            print('if i was useful, give me an star on gitlab; bye.')
+                except(gaierror, ConnectTimeout, ConnectionError):
+                    continue
