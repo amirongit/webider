@@ -43,3 +43,6 @@ w8 for finding valid domains, you can put your own
 domains in the database and change the value of
 use_random_urls in config file, remember to set the
 surfed field to 0 when inserting your domains.
+
+-missing dependency for SOCKS error
+just do pip install requests[socks]
