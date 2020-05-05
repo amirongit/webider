@@ -132,3 +132,4 @@ if __name__ == '__main__':
             main()
         except KeyboardInterrupt:
             print('you can star me in gitlab if you found me useful, bye.')
+            exit()
