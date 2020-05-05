@@ -80,8 +80,17 @@ def main():
                     response = get(domain, proxies=config['proxy'])
                 except(gaierror, ConnectTimeout, ConnectionError):
                     continue
-                if response.status_code == 200:
-                    pass
+                extracted_urls = get_urls(response.text)
+                for url in extracted_urls:
+                    try:
+                        new_domain = DomainModel(url=url, surfed=False)
+                        if config['verbos']:
+                            print(url)
+                        try:
+                            session.add(new_domain)
+                            session.commit()
+                        except IntegrityError:
+                            session.rollback()
 
 
 if __name__ == '__main__':
@@ -119,3 +128,9 @@ if __name__ == '__main__':
             ''')
     _ = input('press Return to continue...')
     call('clear', shell=True)
+    while True:
+        try:
+            main()
+        except KeyboardInterrupt:
+            call('clear', shell=True)
+            print('if i was useful, give me an star on gitlab; bye.')
