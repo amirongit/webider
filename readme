@@ -1,0 +1,23 @@
+-intro
+webider is a project that I started to create a kind of
+web crawler; it uses bs4 library to search webpages for
+urls or <a> tags, sqlite to keep domains and sqlalchemy
+to communicate with database, json format to keep
+configs and requests module to get webpages content.
+
+-quick start
+at the beggining you have no domains available in your
+database, so you have to search thru random domains;
+then, when you have some domains it your database, you
+can easily crawl them to get more!
+to do this, open config file and change use_random_urls
+value to false, now all you have to do is to run this
+program again!
+
+-requirements
+requirements are listed in requirements file, create a
+virtual env or install them on you system.
+
+-contact me
+Email: pinoq@protonmail.com
+reddit, twitter: bigAmirxD
