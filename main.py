@@ -72,7 +72,17 @@ def main():
                 except IntegrityError:
                     session.rollback()
     else:
-        pass
+        while True:
+            domain_pool = session.query(DomainModel).filter(
+                            DomainModel.id_ >=
+                            config['last_surfed_url_id']).all()
+            for domain in domain_pool:
+                try:
+                    response = get(domain, proxies=config['proxy'])
+                except(gaierror, ConnectTimeout, ConnectionError):
+                    continue
+                if response.status_code == 200:
+                    pass
 
 
 if __name__ == '__main__':
