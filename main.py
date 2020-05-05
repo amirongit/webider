@@ -8,7 +8,6 @@ from string import ascii_lowercase
 from subprocess import call
 from urllib3.exceptions import NewConnectionError
 
-
 from bs4 import BeautifulSoup
 from sqlalchemy import create_engine, Integer, Column, String, Boolean
 from sqlalchemy.exc import IntegrityError
