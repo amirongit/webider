@@ -21,3 +21,17 @@ virtual env or install them on you system.
 -contact me
 Email: pinoq@protonmail.com
 reddit, twitter: bigAmirxD
+
+-Note
+to run the program you most be in the src directory,
+otherwise it won't work; also you can set a proxy in
+config file to use when surfin/crawling.
+
+-example proxy config
+
+{
+    "https": "socks5h://host:port",
+    "http": "http://host:port"
+}
+
+*you can use either socks or http for both!
