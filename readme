@@ -34,7 +34,7 @@ config file to use when surfin/crawling.
     "http": "http://host:port"
 }
 
-*you can use either socks or http for both!
+-you can use either socks or http for both!
 
 -searching thru random domains is so fukcing slow!
 

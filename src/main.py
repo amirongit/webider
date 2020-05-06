@@ -1,4 +1,4 @@
-from json import dump, load
+from json import load
 from os.path import dirname, abspath
 from requests import get
 from requests.exceptions import ConnectionError, ConnectTimeout
