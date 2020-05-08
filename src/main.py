@@ -22,6 +22,19 @@ session = alchemy_sessionmaker()
 
 
 class DomainModel(alchemy_base):
+    """
+    DomainModel
+    Represents a domain in the database, used by the orm (sqlalchemy).
+
+    Attributes:
+        __tablename__ (str): Name of the table that stores the values.
+        id_ (int): Keeps the id of the domain in database.
+        url (str): Stores the actual domain.
+        surfed (bool): Tells us if we have surfed this webpage for more urls or not.
+
+    Note:
+        This class wont be used directly by the user.
+    """
     __tablename__ = 'domains'
     id_ = Column(Integer, primary_key=True)
     url = Column(String, unique=True)
@@ -35,6 +48,17 @@ alchemy_base.metadata.create_all(alchemy_engine)
 
 
 def get_urls(plain_html):
+    """
+    get_urls
+    Takes a plain html string and returns the value of <a> tags'
+    href attribute.
+    
+    Args:
+        plain_html (str): The first parameter.
+
+    Returns:
+        list: Extracted urls from the given html.
+    """
     vanilla_bs4 = BeautifulSoup(plain_html, 'html.parser')
     urls = list()
     for a_tag in vanilla_bs4.find_all('a'):
@@ -45,6 +69,23 @@ def get_urls(plain_html):
 
 
 def generate_url(min_length=3, max_length=10, domain_names='com,net,org'):
+    """
+    generate_url
+    Generates a random domain name in the given length and using the given
+    domain names.
+
+    Args:
+        min_length (int): The first parameter, minimum length of domain.
+        max_length (int): The second parameter, maximum length of domain.
+        domain_names (str): The third parameter, domain names that can be used.
+
+    Returns:
+        str: generated url using the given parameters.
+
+    Note:
+        Third parameter should be passd like this:
+        'com,net,org,gov,dev,xyz,us'
+    """
     url = str()
     for i in range(randint(min_length, max_length)):
         url += choice(list(ascii_lowercase))
