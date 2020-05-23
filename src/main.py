@@ -30,7 +30,8 @@ class DomainModel(alchemy_base):
         __tablename__ (str): Name of the table that stores the values.
         id_ (int): Keeps the id of the domain in database.
         url (str): Stores the actual domain.
-        surfed (bool): Tells us if we have surfed this webpage for more urls or not.
+        surfed (bool): Tells us if we have surfed this webpage for more urls
+                       or not.
 
     Note:
         This class wont be used directly by the user.
@@ -52,7 +53,7 @@ def get_urls(plain_html):
     get_urls
     Takes a plain html string and returns the value of <a> tags'
     href attribute.
-    
+
     Args:
         plain_html (str): The first parameter.
 
