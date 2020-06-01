@@ -111,7 +111,8 @@ def main():
                 try:
                     session.add(new_domain)
                     session.commit()
-                    print('    valid!')
+                    if config['verbos']:
+                        print('    valid!')
                 except IntegrityError:
                     session.rollback()
     else:
