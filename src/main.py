@@ -54,10 +54,7 @@ def get_urls(plain_html):
     Takes a plain html string and returns the value of <a> tags'
     href attribute.
 
-    Args:
-        plain_html (str): The first parameter.
-
-    Returns:
+        Returns:
         list: Extracted urls from the given html.
     """
     vanilla_bs4 = BeautifulSoup(plain_html, 'html.parser')
@@ -74,11 +71,6 @@ def generate_url(min_length=3, max_length=10, domain_names='com,net,org'):
     generate_url
     Generates a random domain name in the given length and using the given
     domain names.
-
-    Args:
-        min_length (int): The first parameter, minimum length of domain.
-        max_length (int): The second parameter, maximum length of domain.
-        domain_names (str): The third parameter, domain names that can be used.
 
     Returns:
         str: generated url using the given parameters.
