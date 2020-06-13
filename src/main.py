@@ -1,5 +1,6 @@
+from __main__ import __file__
+
 from json import load
-from os.path import dirname, abspath
 from requests import get
 from requests.exceptions import ConnectionError, ConnectTimeout
 from random import randint, choice
@@ -14,7 +15,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-ABS_PATH = dirname(abspath(__name__))
+ABS_PATH = '/'.join(__file__.split('/')[:-1])
 alchemy_base = declarative_base()
 alchemy_engine = create_engine(f'sqlite:///{ABS_PATH}/webider.sql')
 alchemy_sessionmaker = sessionmaker(bind=alchemy_engine)
