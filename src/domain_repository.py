@@ -6,6 +6,7 @@ from utils import Singleton, py_to_sql_bool
 
 
 class DomainRepository(metaclass=Singleton):
+    # TODO: add ability to mark the domain as unsurfable
     def __init__(self, db_uri: str) -> NoReturn:
         self.db_uri: str = db_uri
         self._create_database_schema()
@@ -14,10 +15,8 @@ class DomainRepository(metaclass=Singleton):
         with sqlite3.connect(self.db_uri) as conn:
             cursor: sqlite3.Cursor = conn.cursor()
             cursor.execute(
-                'CREATE TABLE IF NOT EXISTS domains( '
-                'id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, '
-                'surfed BOOLEAN NOT NULL DEFAULT FALSE, '
-                'url STRING NOT NULL UNIQUE);'
+                'CREATE TABLE IF NOT EXISTS domains( id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE, '
+                'surfed BOOLEAN NOT NULL DEFAULT FALSE, url STRING NOT NULL UNIQUE);'
             )
 
     def get_all_not_surfed_domains_ordered_by_id(
@@ -33,20 +32,14 @@ class DomainRepository(metaclass=Singleton):
 
     def update_domain_surfed_status_by_id(
         self,
-        id: int,
+        id_: int,
         surfed: bool
     ) -> NoReturn:
         with sqlite3.connect(self.db_uri) as conn:
             cursor: sqlite3.Cursor = conn.cursor()
-            cursor.execute(
-                f'UPDATE domains SET surfed = {py_to_sql_bool(surfed)} '
-                f'WHERE id = {id};'
-            )
+            cursor.execute(f'UPDATE domains SET surfed = {py_to_sql_bool(surfed)} WHERE id = {id_};')
 
     def create_domain(self, url: str, surfed: bool = False) -> NoReturn:
         with sqlite3.connect(self.db_uri) as conn:
             cursor: sqlite3.Cursor = conn.cursor()
-            cursor.execute(
-                f'INSERT INTO domains(surfed, url) '
-                f'VALUES({py_to_sql_bool(surfed)}, \'{url}\');'
-            )
+            cursor.execute(f'INSERT INTO domains(surfed, url) VALUES({py_to_sql_bool(surfed)}, \'{url}\');')
