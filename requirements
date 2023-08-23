@@ -1,2 +1,3 @@
 bs4==0.0.1
-SQLAlchemy==1.3.16
+requestes==0.0.1
+requests==2.31.0
