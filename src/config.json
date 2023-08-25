@@ -1,8 +1,0 @@
-{
-    "verbos": true,
-    "use_random_urls": true,
-    "proxy": {
-        "http": "",
-        "https": ""
-    }
-}
