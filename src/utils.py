@@ -1,4 +1,7 @@
+from sqlite3 import Cursor, Row
 from typing import Any, Type
+
+from dto import DomainDTO
 
 
 class Singleton(type):
@@ -10,4 +13,5 @@ class Singleton(type):
         return cls._instances[cls]
 
 
-def py_to_sql_bool(boolean: bool) -> str: return 'TRUE' if boolean else 'FALSE'
+def domain_row_factory(cursor: Cursor, row: Row) -> DomainDTO:
+    return DomainDTO(**dict(zip(list(map(lambda x: x[0], cursor.description)), row)))
