@@ -1,52 +1,68 @@
 from random import choice, randint
 from sqlite3 import IntegrityError
 from string import ascii_lowercase
-from typing import NoReturn
+from typing import NoReturn, Optional
 
 import bs4
 import requests
 
 import utils
 
+from dto import DomainDTO, DomainQueryDTO
 from domain_repository import DomainRepository
 
 
 class DomainService(metaclass=utils.Singleton):
-    def __int__(self, domain_repository: DomainRepository) -> NoReturn: self.domain_repository = domain_repository
+    NETWORK_TIMEOUT: int = 3
+    NETWORK_PROXIES: Optional[dict[str, str]] = None
+
+    def __init__(self, domain_repository: DomainRepository) -> NoReturn:
+        self.domain_repository = domain_repository
+
+    def get_surfable_domains(self) -> List[DomainDTO]:
+        return self.domain_repository.get(DomainQueryDTO(surfed=False))
 
     def surf_random_domains(self, number_of_required_domains: int) -> NoReturn:
         while number_of_required_domains > 0:
-            if self.surf_domain(self.generate_domain()):
+            if self.surf_domain(DomainDTO(url=self.generate_url())):
                 number_of_required_domains -= 1
 
-    def surf_domain(self, domain: str, proxies: list[dict[str, str]] = None) -> bool:
+    def surf_domain(self, domain: DomainDTO) -> bool:
         try:
-            self._surf_domain(domain, proxies)
+            self._surf_domain(domain)
             return True
-        except(IOError, OSError, IntegrityError):
+        except (IOError, OSError, IntegrityError):
             return False
 
-    def _surf_domain(self, domain: str, proxies: list[dict[str, str]] = None) -> NoReturn:
+    def _surf_domain(self, domain: DomainDTO, proxies: Optional[dict[str, str]] = None) -> NoReturn:
         response: requests.Response
-        if (response := requests.get(domain, proxies=proxies)).status_code == 200:
-            [self.domain_repository.create_domain(url) for url in self.extract_domains(response.text)]
+        if (
+            response := requests.get(
+                domain.url,
+                proxies=self.NETWORK_PROXIES,
+                timeout=self.NETWORK_TIMEOUT
+            )
+        ).status_code == 200:
+            domain.surfed = True
+            self.domain_repository.create_or_update(domain)
+            [self.domain_repository.create(DomainDTO(url=url)) for url in self.extract_urls(response.text)]
 
     @staticmethod
-    def extract_domains(plain_html: str) -> list[str]:
+    def extract_urls(plain_html: str) -> list[str]:
         vanilla_bs4: bs4.BeautifulSoup = bs4.BeautifulSoup(plain_html, 'html.parser')
         urls: list[str] = list()
 
         a: bs4.Tag
         for a in vanilla_bs4.find_all('a'):
-            href: str
-            if 'http' in (href := a.attrs['href']):
-                urls.append(href.split('/')[2])
+            href: Optional[str] = a.attrs.get('href')
+            if href is not None and 'http' in href:
+                urls.append(href.split('/')[2].replace('www.', ''))
 
         return list(set(urls))
 
     @staticmethod
-    def generate_domain() -> str:
+    def generate_url() -> str:
         url: str = str()
-        for _ in range(2, randint(8, 32)):
+        for _ in range(0, randint(3, 16)):
             url += choice(list(ascii_lowercase))
         return url + '.' + choice(['com', 'org', 'net', 'biz', 'info'])
