@@ -1,6 +1,10 @@
+import logging
+
+from queue import Queue, Empty
 from random import choice, randint
 from sqlite3 import IntegrityError
 from string import ascii_lowercase
+from threading import current_thread
 from typing import NoReturn, Optional
 
 import bs4
@@ -16,11 +20,25 @@ class DomainService(metaclass=utils.Singleton):
     NETWORK_TIMEOUT: int = 3
     NETWORK_PROXIES: Optional[dict[str, str]] = None
 
-    def __init__(self, domain_repository: DomainRepository) -> NoReturn:
-        self.domain_repository = domain_repository
+    def __init__(self, domain_repository: DomainRepository) -> NoReturn: self.domain_repository = domain_repository
 
-    def get_surfable_domains(self) -> List[DomainDTO]:
-        return self.domain_repository.get(DomainQueryDTO(surfed=False))
+    def publish_to_domain_queue(self, queue: Queue[DomainDTO]) -> NoReturn:
+        while True:
+            if queue.empty():
+                [queue.put(domain) for domain in self.get_surfable_domains()]
+
+    def subscribe_to_domain_queue(self, queue: Queue[DomainDTO]) -> NoReturn:
+        while True:
+            try:
+                domain: DomainDTO = queue.get(timeout=1)
+                surf_result: bool = self.surf_domain(domain)
+                logging.info(
+                    f'''{current_thread().name}: surfing {domain.url}: {'done' if surf_result else 'failed'}'''
+                )
+            except Empty:
+                break
+
+    def get_surfable_domains(self) -> list[DomainDTO]: return self.domain_repository.get(DomainQueryDTO(surfed=False))
 
     def surf_random_domains(self, number_of_required_domains: int) -> NoReturn:
         while number_of_required_domains > 0:
@@ -34,18 +52,17 @@ class DomainService(metaclass=utils.Singleton):
         except (IOError, OSError, IntegrityError):
             return False
 
-    def _surf_domain(self, domain: DomainDTO, proxies: Optional[dict[str, str]] = None) -> NoReturn:
-        response: requests.Response
-        if (
-            response := requests.get(
-                domain.url,
-                proxies=self.NETWORK_PROXIES,
-                timeout=self.NETWORK_TIMEOUT
-            )
-        ).status_code == 200:
+    def _surf_domain(self, domain: DomainDTO) -> NoReturn:
+        response: requests.Response = requests.get(
+            f'http://{domain.url}',
+            proxies=self.NETWORK_PROXIES,
+            timeout=self.NETWORK_TIMEOUT
+        )
+        if response.status_code == 200:
             domain.surfed = True
             self.domain_repository.create_or_update(domain)
-            [self.domain_repository.create(DomainDTO(url=url)) for url in self.extract_urls(response.text)]
+            for url in self.extract_urls(response.text):
+                self.domain_repository.create(DomainDTO(url=url))
 
     @staticmethod
     def extract_urls(plain_html: str) -> list[str]:

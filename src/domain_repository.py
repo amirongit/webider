@@ -1,6 +1,8 @@
+import logging
 import sqlite3
 
-from typing import Any, NoReturn
+from threading import current_thread
+from typing import NoReturn
 
 import utils
 
@@ -22,6 +24,7 @@ class DomainRepository(metaclass=utils.Singleton):
 
     def get(self, domain_query: DomainQueryDTO) -> list[DomainDTO]:
         with sqlite3.connect(self.db_uri) as conn:
+            conn.set_trace_callback(print)
             conn.row_factory = utils.domain_row_factory
             cursor: sqlite3.Cursor = conn.cursor()
             return cursor.execute(self._compile_query(domain_query)).fetchall()
@@ -31,20 +34,23 @@ class DomainRepository(metaclass=utils.Singleton):
 
     def update(self, domain: DomainDTO) -> NoReturn:
         with sqlite3.connect(self.db_uri) as conn:
+            conn.set_trace_callback(print)
             cursor: sqlite3.Cursor = conn.cursor()
             cursor.execute(
                 f'UPDATE domains SET surfed = {str(domain.surfed)}, '
-                f'url = \'{domain.url}\' WHERE id = {domain.surfed};'
+                f'url = \'{domain.url}\' WHERE id = {domain.id};'
             )
 
     def create(self, domain: DomainDTO) -> NoReturn:
         with sqlite3.connect(self.db_uri) as conn:
+            conn.set_trace_callback(print)
             cursor: sqlite3.Cursor = conn.cursor()
             cursor.execute(
                 f'INSERT INTO domains(surfed, url) VALUES({str(domain.surfed)}, \'{domain.url}\');'
             )
 
-    def _compile_query(self, domain_query: DomainQueryDTO):
+    @staticmethod
+    def _compile_query(domain_query: DomainQueryDTO):
         query = 'SELECT * FROM domains '
 
         if len(constraints := list(filter(lambda x: x[1] is not None, domain_query.__dict__.items()))) > 0:
