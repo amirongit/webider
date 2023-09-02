@@ -1,7 +1,6 @@
 import logging
 import sqlite3
 
-from threading import current_thread
 from typing import NoReturn
 
 import utils
@@ -24,7 +23,6 @@ class DomainRepository(metaclass=utils.Singleton):
 
     def get(self, domain_query: DomainQueryDTO) -> list[DomainDTO]:
         with sqlite3.connect(self.db_uri) as conn:
-            conn.set_trace_callback(print)
             conn.row_factory = utils.domain_row_factory
             cursor: sqlite3.Cursor = conn.cursor()
             return cursor.execute(self._compile_query(domain_query)).fetchall()
@@ -34,7 +32,6 @@ class DomainRepository(metaclass=utils.Singleton):
 
     def update(self, domain: DomainDTO) -> NoReturn:
         with sqlite3.connect(self.db_uri) as conn:
-            conn.set_trace_callback(print)
             cursor: sqlite3.Cursor = conn.cursor()
             cursor.execute(
                 f'UPDATE domains SET surfed = {str(domain.surfed)}, '
@@ -43,7 +40,6 @@ class DomainRepository(metaclass=utils.Singleton):
 
     def create(self, domain: DomainDTO) -> NoReturn:
         with sqlite3.connect(self.db_uri) as conn:
-            conn.set_trace_callback(print)
             cursor: sqlite3.Cursor = conn.cursor()
             cursor.execute(
                 f'INSERT INTO domains(surfed, url) VALUES({str(domain.surfed)}, \'{domain.url}\');'
