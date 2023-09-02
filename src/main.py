@@ -16,7 +16,7 @@ with open(f'{"/".join(__file__.split("/")[:-1])}/config.json') as cf:
 
 
 def main():
-    logging.basicConfig(level=logging.ERROR)
+    logging.basicConfig(level=logging.INFO, format='[%(asctime)s - %(threadName)s - %(levelname)s: %(message)s]')
 
     domain_repository = DomainRepository(CONFIGURATION['database_uri'])
 
