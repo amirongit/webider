@@ -1,48 +1,23 @@
--intro
-webider is a project that I started to create a kind of
-web crawler; it uses bs4 library to search webpages for
-urls or <a> tags, sqlite to keep domains and sqlalchemy
-to communicate with database, json format to keep
-configs and requests module to get webpages content.
+webider is an absurd attempt to aggregate all the domains that can be found on the internet.
 
--quick start
-at the beggining you have no domains available in your
-database, so you have to search thru random domains;
-then, when you have some domains it your database, you
-can easily crawl them to get more!
-to do this, open config file and change use_random_urls
-value to false, now all you have to do is to run this
-program again!
-
--requirements
-requirements are listed in requirements file, create a
-virtual env or install them on you system.
-
--contact me
-Email: pinoq@protonmail.com
-reddit, twitter: bigAmirxD
-
--Note
-to run the program you most be in the src directory,
-otherwise it won't work; also you can set a proxy in
-config file to use when surfin/crawling.
-
--example proxy config
+- example proxy config
 
 {
     "https": "socks5h://host:port",
     "http": "http://host:port"
 }
 
--you can use either socks or http for both!
+- how to
 
--searching thru random domains is so fukcing slow!
+```
+# after cloning the project, creating a virtual environment and setting up the db uri in config.json
+cd webider/src/
+pip install -r requirements
+python main.py
+```
 
-if you have domains to start and you don't want to
-w8 for finding valid domains, you can put your own
-domains in the database and change the value of
-use_random_urls in config file, remember to set the
-surfed field to 0 when inserting your domains.
+- missing dependency for SOCKS?
 
--missing dependency for SOCKS error
-just do pip install requests[socks]
+```
+pip install requests[socks]
+```
