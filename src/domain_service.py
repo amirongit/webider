@@ -41,8 +41,11 @@ class DomainService(metaclass=utils.Singleton):
 
     def surf_random_domains(self, number_of_required_domains: int) -> NoReturn:
         while number_of_required_domains > 0:
-            if self.surf_domain(DomainDTO(url=self.generate_url())):
+            url: str = self.generate_url()
+            surf_result: bool = self.surf_domain(DomainDTO(url=url))
+            if surf_result:
                 number_of_required_domains -= 1
+            logging.info(f'''surfing {url}: {'done' if surf_result else 'failed'}''')
 
     def surf_domain(self, domain: DomainDTO) -> bool:
         try:
