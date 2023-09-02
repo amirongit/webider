@@ -12,7 +12,7 @@ webider is an absurd attempt to aggregate all the domains that can be found on t
 ```
 # after cloning the project, creating a virtual environment and setting up the db uri in config.json
 cd webider/src/
-pip install -r requirements
+pip install -r ../requirements
 python main.py
 ```
 
