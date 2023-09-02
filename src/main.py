@@ -30,11 +30,18 @@ def main():
 
     while True:
         [surf_queue.put(domain) for domain in domain_service.get_surfable_domains()]
+        max_workers: int = min(32, os.cpu_count() + 4) - 1
 
         if surf_queue.empty():
-            domain_service.surf_random_domains(16)
+            random_surfers: list[Thread] = [
+                Thread(
+                    target=domain_service.surf_random_domains,
+                    args=(2,)
+                ) for _ in range(max_workers)
+            ]
+            [random_surfer.start() for random_surfer in random_surfers]
+            [random_surfer.join() for random_surfer in random_surfers]
         else:
-            max_workers: int = min(32, os.cpu_count() + 4) - 1
             publisher: Thread = Thread(target=domain_service.publish_to_domain_queue, args=(surf_queue,))
             subscribers: list[Thread] = [
                 Thread(
@@ -51,4 +58,23 @@ def main():
 
 
 if __name__ == '__main__':
+    print('''
+                      ::
+                     +ooo+
+                    +oooooo:
+           /++/     :ooooooo+
+         :yyyyyy/     +ooooooo:
+         +yyyyyyo      /ooooooo/
+          /syyy+ :/+:    +oooooo+
+                +ooooo+/  /oooooo+
+       :       +ooooooooo+/:+ooooo+
+     +ooo+:    :ooooooooooooooooooo:
+    +ooooooo/    +oooo+/+ooooooooo/
+    :+oooooooo+:  +oooo+  :+oooo/
+      :/ooooooooo/:/ooooo:   ::
+         :+oooooooo+oooooo:
+            /+oooooooooooo:
+               /+ooooooo+
+                  :/++/
+    ''')
     main()
