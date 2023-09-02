@@ -4,7 +4,6 @@ from queue import Queue, Empty
 from random import choice, randint
 from sqlite3 import IntegrityError
 from string import ascii_lowercase
-from threading import current_thread
 from typing import NoReturn, Optional
 
 import bs4
@@ -25,16 +24,16 @@ class DomainService(metaclass=utils.Singleton):
     def publish_to_domain_queue(self, queue: Queue[DomainDTO]) -> NoReturn:
         while True:
             if queue.empty():
-                [queue.put(domain) for domain in self.get_surfable_domains()]
+                for domain in self.get_surfable_domains():
+                    logging.info(f'putting {domain.url} in surf queue')
+                    queue.put(domain)
 
     def subscribe_to_domain_queue(self, queue: Queue[DomainDTO]) -> NoReturn:
         while True:
             try:
                 domain: DomainDTO = queue.get(timeout=1)
                 surf_result: bool = self.surf_domain(domain)
-                logging.info(
-                    f'''{current_thread().name}: surfing {domain.url}: {'done' if surf_result else 'failed'}'''
-                )
+                logging.info(f'''surfing {domain.url}: {'done' if surf_result else 'failed'}''')
             except Empty:
                 break
 
@@ -47,12 +46,11 @@ class DomainService(metaclass=utils.Singleton):
 
     def surf_domain(self, domain: DomainDTO) -> bool:
         try:
-            self._surf_domain(domain)
-            return True
+            return self._surf_domain(domain)
         except (IOError, OSError, IntegrityError):
             return False
 
-    def _surf_domain(self, domain: DomainDTO) -> NoReturn:
+    def _surf_domain(self, domain: DomainDTO) -> bool:
         response: requests.Response = requests.get(
             f'http://{domain.url}',
             proxies=self.NETWORK_PROXIES,
@@ -63,6 +61,9 @@ class DomainService(metaclass=utils.Singleton):
             self.domain_repository.create_or_update(domain)
             for url in self.extract_urls(response.text):
                 self.domain_repository.create(DomainDTO(url=url))
+            return True
+        else:
+            return False
 
     @staticmethod
     def extract_urls(plain_html: str) -> list[str]:
@@ -73,7 +74,10 @@ class DomainService(metaclass=utils.Singleton):
         for a in vanilla_bs4.find_all('a'):
             href: Optional[str] = a.attrs.get('href')
             if href is not None and 'http' in href:
-                urls.append(href.split('/')[2].replace('www.', ''))
+                try:
+                    urls.append(href.split('/')[2].replace('www.', ''))
+                except IndexError:
+                    continue
 
         return list(set(urls))
 
