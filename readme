@@ -1,14 +1,14 @@
 webider is an absurd attempt to aggregate all the domains that can be found on the internet.
 
 - example proxy config
-
+```
 {
     "https": "socks5h://host:port",
     "http": "http://host:port"
 }
+```
 
 - how to
-
 ```
 # after cloning the project, creating a virtual environment and setting up the db uri in config.json
 cd webider/src/
@@ -17,7 +17,6 @@ python main.py
 ```
 
 - missing dependency for SOCKS?
-
 ```
 pip install requests[socks]
 ```
