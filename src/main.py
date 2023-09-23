@@ -1,21 +1,19 @@
-from __main__ import __file__
-
-from threading import Thread
-
 import json
 import logging
 import os
 import queue
+from threading import Thread
+
+from __main__ import __file__
 
 from domain_repository import DomainRepository
 from domain_service import DomainService
-
 
 with open(f'{"/".join(__file__.split("/")[:-1])}/config.json') as cf:
     CONFIGURATION: dict = json.loads(cf.read())
 
 
-def main():
+def main() -> None:
     logging.basicConfig(level=logging.INFO, format='[%(asctime)s - %(threadName)s - %(levelname)s: %(message)s]')
 
     domain_repository = DomainRepository(CONFIGURATION['database_uri'])

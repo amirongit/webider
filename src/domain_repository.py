@@ -1,19 +1,15 @@
-import logging
 import sqlite3
 
-from typing import NoReturn
-
 import utils
-
 from dto import DomainDTO, DomainQueryDTO
 
 
 class DomainRepository(metaclass=utils.Singleton):
-    def __init__(self, db_uri: str) -> NoReturn:
+    def __init__(self, db_uri: str) -> None:
         self.db_uri: str = db_uri
         self._create_database_schema()
 
-    def _create_database_schema(self) -> NoReturn:
+    def _create_database_schema(self) -> None:
         with sqlite3.connect(self.db_uri) as conn:
             cursor: sqlite3.Cursor = conn.cursor()
             cursor.execute(
@@ -27,10 +23,10 @@ class DomainRepository(metaclass=utils.Singleton):
             cursor: sqlite3.Cursor = conn.cursor()
             return cursor.execute(self._compile_query(domain_query)).fetchall()
 
-    def create_or_update(self, domain: DomainDTO) -> NoReturn:
+    def create_or_update(self, domain: DomainDTO) -> None:
         self.create(domain) if domain.id is None else self.update(domain)
 
-    def update(self, domain: DomainDTO) -> NoReturn:
+    def update(self, domain: DomainDTO) -> None:
         with sqlite3.connect(self.db_uri) as conn:
             cursor: sqlite3.Cursor = conn.cursor()
             cursor.execute(
@@ -38,7 +34,7 @@ class DomainRepository(metaclass=utils.Singleton):
                 f'url = \'{domain.url}\' WHERE id = {domain.id};'
             )
 
-    def create(self, domain: DomainDTO) -> NoReturn:
+    def create(self, domain: DomainDTO) -> None:
         with sqlite3.connect(self.db_uri) as conn:
             cursor: sqlite3.Cursor = conn.cursor()
             cursor.execute(

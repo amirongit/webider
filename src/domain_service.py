@@ -1,34 +1,32 @@
 import logging
-
-from queue import Queue, Empty
+from queue import Empty, Queue
 from random import choice, randint
 from sqlite3 import IntegrityError
 from string import ascii_lowercase
-from typing import NoReturn, Optional
+from typing import Optional
 
 import bs4
 import requests
 
 import utils
-
-from dto import DomainDTO, DomainQueryDTO
 from domain_repository import DomainRepository
+from dto import DomainDTO, DomainQueryDTO
 
 
 class DomainService(metaclass=utils.Singleton):
     NETWORK_TIMEOUT: int = 3
     NETWORK_PROXIES: Optional[dict[str, str]] = None
 
-    def __init__(self, domain_repository: DomainRepository) -> NoReturn: self.domain_repository = domain_repository
+    def __init__(self, domain_repository: DomainRepository) -> None: self.domain_repository = domain_repository
 
-    def publish_to_domain_queue(self, queue: Queue[DomainDTO]) -> NoReturn:
+    def publish_to_domain_queue(self, queue: Queue[DomainDTO]) -> None:
         while True:
             if queue.empty():
                 for domain in self.get_surfable_domains():
                     logging.info(f'putting {domain.url} in surf queue')
                     queue.put(domain)
 
-    def subscribe_to_domain_queue(self, queue: Queue[DomainDTO]) -> NoReturn:
+    def subscribe_to_domain_queue(self, queue: Queue[DomainDTO]) -> None:
         while True:
             try:
                 domain: DomainDTO = queue.get(timeout=1)
@@ -39,7 +37,7 @@ class DomainService(metaclass=utils.Singleton):
 
     def get_surfable_domains(self) -> list[DomainDTO]: return self.domain_repository.get(DomainQueryDTO(surfed=False))
 
-    def surf_random_domains(self, number_of_required_domains: int) -> NoReturn:
+    def surf_random_domains(self, number_of_required_domains: int) -> None:
         while number_of_required_domains > 0:
             url: str = self.generate_url()
             surf_result: bool = self.surf_domain(DomainDTO(url=url))
