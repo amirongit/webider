@@ -105,3 +105,4 @@ venv.bak/
 *.sql
 *.ipynb
 .idea/
+venv/
